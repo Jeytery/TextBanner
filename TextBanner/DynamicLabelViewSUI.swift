@@ -20,7 +20,7 @@ struct DynamicLabelViewSUI: View {
         Text(state.text)
             .padding(40)
             .font(.system(size: 500))
-            .minimumScaleFactor(0.01)
+            .minimumScaleFactor(0.09)
             .multilineTextAlignment(.center)
             .onTapGesture(count: 2) {
                 state.doubleTapHandler?()
