@@ -12,7 +12,8 @@ import SwiftUI
 class MainCoordinator {
     private(set) var navigationController = UINavigationController()
     private let menuViewController = MenuViewController()
-    private let dynamicLabelViewController = DynamicLabelViewController()
+    private lazy var dynamicLabelViewController = UIHostingController(rootView: DynamicLabelViewSUI(state: dynamicLabelViewState))
+    //private lazy var dynamicLabelViewController = DynamicLabelViewController()
     
     private var dynamicLabelViewState = DynamicLabelViewSUIState()
     
@@ -52,7 +53,12 @@ class MainCoordinator {
         )
         dynamicLabelViewController.modalTransitionStyle = .crossDissolve
         dynamicLabelViewController.modalPresentationStyle = .overFullScreen
-        dynamicLabelViewController.doubleTapHandler = { [weak self] in
+//        dynamicLabelViewController.doubleTapHandler = { [weak self] in
+//            let value = UIInterfaceOrientation.portrait.rawValue
+//            UIDevice.current.setValue(value, forKey: "orientation")
+//            self?.hideDynamicLabel()
+//        }
+        dynamicLabelViewState.doubleTapHandler = { [weak self] in
             let value = UIInterfaceOrientation.portrait.rawValue
             UIDevice.current.setValue(value, forKey: "orientation")
             self?.hideDynamicLabel()
@@ -74,12 +80,21 @@ class MainCoordinator {
     }
     
     private func showDynamicLabel() {
+        UIApplication.shared.isIdleTimerDisabled = true
         navigationController.present(dynamicLabelViewController, animated: true)
-        dynamicLabelViewController.setDynamicText(menuViewController.text)
+        if menuViewController.text.last == " " {
+            let mutableAttributedString =  NSMutableAttributedString.init(attributedString:  menuViewController.attributedText)
+            mutableAttributedString.deleteCharacters(in: NSRange(location:(mutableAttributedString.length) - 1,length:1))
+            dynamicLabelViewState.text = .init(mutableAttributedString)
+        }
+        else {
+            dynamicLabelViewState.text = .init(menuViewController.attributedText)
+        }    
     }
     
     private func hideDynamicLabel() {
-        dynamicLabelViewController.dismiss(animated: true)
+        UIApplication.shared.isIdleTimerDisabled = false
+        dynamicLabelViewController.dismiss(animated: false)
     }
     
     @objc func iphoneDidChangeOrientation() {

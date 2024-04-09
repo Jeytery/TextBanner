@@ -58,10 +58,14 @@ class DynamicLabelViewController: UIViewController {
 
 extension DynamicLabelViewController {
     func setDynamicText(_ text: String) {
-        if text.isEmpty {
-            label.text = "No phrase..."
-            return
-        }
+//        if text.isEmpty {
+//            label.attributedText = .init(string: text)//= "No phrase..."
+//            return
+//        }
         label.text = text
+    }
+    
+    func setDynamicTextAttributed(_ text: NSAttributedString) {
+        label.attributedText = text
     }
 }

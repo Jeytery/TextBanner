@@ -8,11 +8,13 @@
 import SwiftUI
 
 class DynamicLabelViewSUIState: ObservableObject {
-    @Published var text = "*Text*🤡🤡🤡🤡"
+    @Published var text: AttributedString = "Text"
+    
+    var doubleTapHandler: (() -> Void)?
 }
 
 struct DynamicLabelViewSUI: View {
-    let state: DynamicLabelViewSUIState
+    @ObservedObject var state: DynamicLabelViewSUIState
     
     var body: some View {
         Text(state.text)
@@ -20,6 +22,9 @@ struct DynamicLabelViewSUI: View {
             .font(.system(size: 500))
             .minimumScaleFactor(0.01)
             .multilineTextAlignment(.center)
+            .onTapGesture(count: 2) {
+                state.doubleTapHandler?()
+            }
     }
 }
 
