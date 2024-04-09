@@ -53,11 +53,6 @@ class MainCoordinator {
         )
         dynamicLabelViewController.modalTransitionStyle = .crossDissolve
         dynamicLabelViewController.modalPresentationStyle = .overFullScreen
-//        dynamicLabelViewController.doubleTapHandler = { [weak self] in
-//            let value = UIInterfaceOrientation.portrait.rawValue
-//            UIDevice.current.setValue(value, forKey: "orientation")
-//            self?.hideDynamicLabel()
-//        }
         dynamicLabelViewState.doubleTapHandler = { [weak self] in
             let value = UIInterfaceOrientation.portrait.rawValue
             UIDevice.current.setValue(value, forKey: "orientation")

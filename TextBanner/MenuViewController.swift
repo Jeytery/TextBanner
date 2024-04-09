@@ -76,7 +76,11 @@ class MenuViewController: UIViewController {
         if isPlaceholderShown {
             return
         }
-        textView.text = ""
+        let attr = NSAttributedString(string: "", attributes: [
+            .font: UIFont.systemFont(ofSize: 33),
+            .foregroundColor: UIColor.label
+        ])
+        textView.attributedText = attr
         if !textView.isFirstResponder {
             textViewDidEndEditing(textView)
         }
