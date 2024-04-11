@@ -9,22 +9,8 @@ import Foundation
 import UIKit
 import SwiftUI
 
-final class MainCoorinatorNavigationController: UINavigationController {
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .all
-    }
-    
-    override var shouldAutorotate: Bool {
-        return false
-    }
-    
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
-    }
-}
-
 final class MainCoordinator {
-    private(set) var navigationController = MainCoorinatorNavigationController()
+    private(set) var navigationController = UINavigationController()
     private let menuViewController = MenuViewController()
     private lazy var dynamicLabelViewController = UIHostingController(
         rootView: DynamicLabelViewSUI(state: dynamicLabelViewState)
@@ -59,12 +45,6 @@ final class MainCoordinator {
             name: UIDevice.orientationDidChangeNotification,
             object: nil
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(iphoneDidChangeOrientation),
-            name: UIDevice.orientationDidChangeNotification,
-            object: nil
-        )
         dynamicLabelViewController.modalTransitionStyle = .crossDissolve
         dynamicLabelViewController.modalPresentationStyle = .overFullScreen
         
@@ -72,14 +52,15 @@ final class MainCoordinator {
         tap.numberOfTapsRequired = 2
         dynamicLabelViewController.view.addGestureRecognizer(tap)
         
-        dynamicLabelViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        navigationController.view.addSubview(dynamicLabelViewController.view)
-        
-        dynamicLabelViewController.view.topAnchor.constraint(equalTo: navigationController.view.topAnchor).isActive = true
-        dynamicLabelViewController.view.leftAnchor.constraint(equalTo: navigationController.view.leftAnchor).isActive = true
-        dynamicLabelViewController.view.rightAnchor.constraint(equalTo: navigationController.view.rightAnchor).isActive = true
-        dynamicLabelViewController.view.bottomAnchor.constraint(equalTo: navigationController.view.bottomAnchor).isActive = true
-        dynamicLabelViewController.view.alpha = 0
+        if #available(iOS 16.0, *) {
+            dynamicLabelViewController.view.translatesAutoresizingMaskIntoConstraints = false
+            navigationController.view.addSubview(dynamicLabelViewController.view)
+            dynamicLabelViewController.view.topAnchor.constraint(equalTo: navigationController.view.topAnchor).isActive = true
+            dynamicLabelViewController.view.leftAnchor.constraint(equalTo: navigationController.view.leftAnchor).isActive = true
+            dynamicLabelViewController.view.rightAnchor.constraint(equalTo: navigationController.view.rightAnchor).isActive = true
+            dynamicLabelViewController.view.bottomAnchor.constraint(equalTo: navigationController.view.bottomAnchor).isActive = true
+            dynamicLabelViewController.view.alpha = 0
+        }
     }
     
     @objc func didTapAction() {
@@ -93,7 +74,6 @@ final class MainCoordinator {
                     print(windowScene?.effectiveGeometry ?? "")
                 }
                 self.dynamicLabelViewController.setNeedsUpdateOfSupportedInterfaceOrientations()
-                
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                 self.hideDynamicLabel()
@@ -139,10 +119,15 @@ final class MainCoordinator {
     
     private func showDynamicLabel() {
         UIApplication.shared.isIdleTimerDisabled = true
-        
-        UIView.animate(withDuration: 0.3, animations: {
-            self.dynamicLabelViewController.view.alpha = 1
-        })
+        if #available(iOS 16.0, *) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.dynamicLabelViewController.view.alpha = 1
+            })
+        }
+        else {
+            dynamicLabelViewController.view.alpha = 1
+            self.navigationController.present(dynamicLabelViewController, animated: true)
+        }
       
         if menuViewController.text.last == " " {
             let mutableAttributedString =  NSMutableAttributedString.init(attributedString:  menuViewController.attributedText)
@@ -155,9 +140,14 @@ final class MainCoordinator {
     }
     
     private func hideDynamicLabel() {
-        UIView.animate(withDuration: 0.3, animations: {
-            self.dynamicLabelViewController.view.alpha = 0
-        })
+        if #available(iOS 16.0, *) {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.dynamicLabelViewController.view.alpha = 0
+            })
+        }
+        else {
+            dynamicLabelViewController.dismiss(animated: false)
+        }
         UIApplication.shared.isIdleTimerDisabled = false
     }
     

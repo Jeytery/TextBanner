@@ -195,6 +195,7 @@ struct SettingsView: View {
                         }
                     }
                 }
+                
             }
         }
         .onAppear {
@@ -210,6 +211,8 @@ struct SettingsView: View {
                 }
             })
         }
+        .animation(.default, value: investors.isEmpty)
+        .animation(.default, value: protips)
     }
 }
 

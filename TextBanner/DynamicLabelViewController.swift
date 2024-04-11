@@ -48,21 +48,21 @@ class DynamicLabelViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override var prefersHomeIndicatorAutoHidden: Bool {
-        return true
-    }
-    
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .all
-    }
-    
-    override var shouldAutorotate: Bool {
-        return false
-    }
-    
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
-    }
+//    override var prefersHomeIndicatorAutoHidden: Bool {
+//        return true
+//    }
+//    
+//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+//        return .all
+//    }
+//    
+//    override var shouldAutorotate: Bool {
+//        return false
+//    }
+//    
+//    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+//        return .portrait
+//    }
     
     private let maximumFontSize: CGFloat = 520
     private let minimumFontSize: CGFloat = 32

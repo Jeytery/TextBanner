@@ -22,7 +22,7 @@ struct DynamicLabelViewSUI: View {
                 .minimumScaleFactor(0.09)
                 .multilineTextAlignment(.center)
         }
-       
+        
     }
 }
 
