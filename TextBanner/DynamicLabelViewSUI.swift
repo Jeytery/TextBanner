@@ -9,8 +9,6 @@ import SwiftUI
 
 class DynamicLabelViewSUIState: ObservableObject {
     @Published var text: AttributedString = "Text"
-    
-    var doubleTapHandler: (() -> Void)?
 }
 
 struct DynamicLabelViewSUI: View {
@@ -23,11 +21,6 @@ struct DynamicLabelViewSUI: View {
                 .font(.system(size: 500))
                 .minimumScaleFactor(0.09)
                 .multilineTextAlignment(.center)
-            Color.red.opacity(0)
-                .ignoresSafeArea()
-                .onTapGesture(count: 2) {
-                    state.doubleTapHandler?()
-                }
         }
        
     }

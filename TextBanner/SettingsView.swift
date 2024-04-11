@@ -9,18 +9,37 @@ import SwiftUI
 import SettingsIconGenerator
 import MessageUI
 
+struct InvestorBody: Codable {
+    let name: String
+    let investition: String
+    
+    var identifiable: InvestorBodyId {
+        return InvestorBodyId(name: name, investition: investition)
+    }
+}
+
+struct InvestorBodyId: Codable, Identifiable {
+    let name: String
+    let investition: String
+    
+    var id = UUID()
+}
+
 struct InvestorsResponse: Codable {
-    let investors: [String]
+    let investors: [InvestorBody]
+    let protips: [String]
 }
 
 struct SettingsView: View {
-    @State private var investors: [String] = []
+    @State private var investors: [InvestorBodyId] = []
     @State private var isInvestorsFailed: String? = nil
     @State private var isVersionTapped: Bool = false
     @State private var isShowingMailView = false
     
+    @State private var protips: [String] = []
+    
     private let githubService = GitHubStorageService<InvestorsResponse>(
-        remoteStorageUrl: "https://api.github.com/repos/Jeytery/text-banner-investors/contents/README.md"
+        remoteStorageUrl: "https://api.github.com/repos/Jeytery/text-banner-settings/contents/README.md"
     )
     
     private func infoCell(
@@ -107,7 +126,7 @@ struct SettingsView: View {
             Section {
                 infoCell(
                     title1: "Version",
-                    title2: isVersionTapped ? "don't hurt your friends" : "1.0",
+                    title2: isVersionTapped ? "don't hurt your friends" : "1.0.1",
                     disclosureIndicator: false,
                     imageName: "1.circle.fill",
                     imageColor: .darkGray,
@@ -115,8 +134,22 @@ struct SettingsView: View {
                         isVersionTapped.toggle()
                     })
             }
-            Section(header: Text("protip")) {
-                Text("Double tap to exit fullscreen")
+            
+            if protips.isEmpty, isInvestorsFailed == nil {
+                Section(header: Text("Protips")) {
+                    HStack {
+                        Spacer()
+                        ProgressView()
+                        Spacer()
+                    }
+                }
+            }
+            else {
+                Section(header: Text("Protips")) {
+                    ForEach(protips, id: \.self) { value in
+                        Text(value)
+                    }
+                }
             }
             Section(header: Text("More apps"), footer: Text("App to shuffle any information")) {
                 ZStack {
@@ -151,17 +184,27 @@ struct SettingsView: View {
             }
             else {
                 Section(header: Text("Investors")) {
-                    ForEach(investors, id: \.self) { value in
-                        Text(value)
+                    ForEach(investors) { value in
+                        VStack {
+                            VStack(alignment: .leading) {
+                                Text(value.name)
+                                Text(value.investition)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                        }
                     }
                 }
             }
         }
         .onAppear {
-            githubService.getCodableType(completion: {result in
+            githubService.getCodableType(completion: { result in
                 switch result {
                 case .success(let _investorsResponse):
-                    self.investors = _investorsResponse.investors
+                    self.investors = _investorsResponse.investors.map {
+                        $0.identifiable
+                    }
+                    self.protips = _investorsResponse.protips
                 case .failure(let error):
                     self.isInvestorsFailed = error.localizedDescription
                 }

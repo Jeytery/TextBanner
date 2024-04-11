@@ -67,7 +67,6 @@ final class MainCoordinator {
         )
         dynamicLabelViewController.modalTransitionStyle = .crossDissolve
         dynamicLabelViewController.modalPresentationStyle = .overFullScreen
-        dynamicLabelViewState.doubleTapHandler = { [weak self] in }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapAction))
         tap.numberOfTapsRequired = 2
