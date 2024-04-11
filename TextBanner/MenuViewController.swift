@@ -64,6 +64,18 @@ class MenuViewController: UIViewController {
         self.view.endEditing(true)
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .all
+    }
+    
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }

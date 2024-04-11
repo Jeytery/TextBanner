@@ -52,19 +52,23 @@ class DynamicLabelViewController: UIViewController {
         return true
     }
     
-    private let maximumFontSize: CGFloat = 500
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .all
+    }
+    
+    override var shouldAutorotate: Bool {
+        return false
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+    
+    private let maximumFontSize: CGFloat = 520
     private let minimumFontSize: CGFloat = 32
 }
 
 extension DynamicLabelViewController {
-    func setDynamicText(_ text: String) {
-//        if text.isEmpty {
-//            label.attributedText = .init(string: text)//= "No phrase..."
-//            return
-//        }
-        label.text = text
-    }
-    
     func setDynamicTextAttributed(_ text: NSAttributedString) {
         label.attributedText = text
     }
